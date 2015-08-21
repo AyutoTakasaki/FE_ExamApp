@@ -1,0 +1,69 @@
+<div class="__jlt_layout">
+	<div class="__jlt_stage_top_bar __jlt_stage_title_bar1" id="__jlt_stage_title_bar1">
+		<div class="__jlt_stage_top_bar_leftbutton __jlt_stage_top_bar_button">
+			<img src="_jtl_res/icon/topbar/app_default_icon.png" class="__jlt_stage_top_bar_app_icon" />
+		</div>
+		<span class="__jlt_stage_title_text"></span>
+	</div>
+	<div class="__jlt_stage_top_bar __jlt_stage_title_bar2" id="__jlt_stage_title_bar2">
+		<div class="__jlt_stage_top_bar_leftbutton __jlt_stage_top_bar_button">
+			<img src="_jtl_res/icon/topbar/menu.png" width="14" class="__jlt_stage_top_bar_menu" />
+			<img src="_jtl_res/icon/topbar/app_default_icon.png" class="__jlt_stage_top_bar_app_icon" />
+		</div>
+		<span class="__jlt_stage_title_text"></span>
+	</div>
+	<div class="__jlt_stage_top_bar __jlt_stage_navigation_bar1" id="__jlt_stage_navigation_bar1">
+		<div class="__jlt_stage_top_bar_leftbutton __jlt_stage_top_bar_button">
+			<img src="_jtl_res/icon/topbar/arrow_left.png" width="14" class="__jlt_stage_top_bar_left_arrow" />
+			<img src="_jtl_res/icon/topbar/app_default_icon.png" class="__jlt_stage_top_bar_app_icon" />
+		</div>
+		<span class="__jlt_stage_title_text"></span>
+	</div>
+	<div class="__jlt_stage_top_bar __jlt_stage_navigation_bar2" id="__jlt_stage_navigation_bar2">
+		<div class="__jlt_stage_top_bar_right_area">
+			<div class="__jlt_stage_top_bar_rightsidenavi_right_arrow __jlt_stage_top_bar_button">
+				<img src="_jtl_res/icon/topbar/item_arrow_right.png" width="19" />
+			</div>
+			<div class="__jlt_stage_top_bar_rightsidenavi_left_arrow __jlt_stage_top_bar_button">
+				<img src="_jtl_res/icon/topbar/item_arrow_left.png" width="19" />
+			</div>
+		</div>
+		<div class="__jlt_stage_top_bar_leftbutton __jlt_stage_top_bar_button">
+			<img src="_jtl_res/icon/topbar/arrow_left.png" width="14" class="__jlt_stage_top_bar_left_arrow" />
+			<img src="_jtl_res/icon/topbar/app_default_icon.png" class="__jlt_stage_top_bar_app_icon" />
+		</div>
+		<span class="__jlt_stage_title_text"></span>
+	</div>
+	<div id="__jlt_page_basic_layout">
+	</div>
+	<div id="__jlt_stage_basic_layout">
+		<div class="__jlt_stage_actionmenu_area"></div>
+		<div class="__jlt_stage_area_top">
+			<div class="__jlt_stage_top_bar __jlt_stage_title_bar1">
+				<div class="__jlt_stage_top_bar_leftbutton __jlt_stage_top_bar_button">
+					<img src="_jtl_res/icon/topbar/app_default_icon.png" class="__jlt_stage_top_bar_app_icon" />
+				</div>
+				<span class="__jlt_stage_title_text"></span>
+			</div>
+		</div>
+		<div class="__jlt_stage_area_body">
+		</div>
+		<div class="__jlt_stage_area_bottom">
+		</div>
+		<div class="__jlt_stage_black_overray"> </div>
+		<div class="__jlt_stage_black_overray __jlt_stage_black_overray2"> </div>
+		<div class="__jlt_stage_white_overray"> </div>
+		<div class="__jlt_stage_for_spinner"> </div>
+	</div>
+	<div id="basic_listview_layout" class="__jlt_view_default_listview_row"><span id="name"></span></div>
+	<div class="__jlt_stage_bottom_tabbar_area" id="__jlt_stage_tab_bar1">
+		<table class="__jlt_stage_bottom_tabbar"><tbody>
+		<tr></tr>
+		<tr></tr>
+		</tbody></table>
+	</div>
+	<li id="__jlt_table_view_rowitem">
+		<span class="right" id="right"> description </span>
+		<span class="left" id="left"> title </span>
+	</li>
+</div>

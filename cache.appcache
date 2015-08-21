@@ -1,0 +1,31 @@
+CACHE MANIFEST
+#v1.0.0 アプリ製作中
+# JDBFrameworkバグ修正、セッション保存
+
+CACHE:
+
+_jtl_res/icon/other/loading1.gif
+index.html
+ques.js
+linen.png
+
+JTLFramework.js
+JTLFramework.css
+JDBFramework.js
+JTLLayouts.txt
+
+_jtl_res/bg/pw_pattern.png
+
+_jtl_res/icon/tabbar/fav.png
+_jtl_res/icon/tabbar/help.png
+_jtl_res/icon/tabbar/history.png
+_jtl_res/icon/tabbar/info.png
+_jtl_res/icon/tabbar/menu.png
+_jtl_res/icon/tabbar/record.png
+_jtl_res/icon/tabbar/settings.png
+
+_jtl_res/icon/topbar/app_default_icon.png
+_jtl_res/icon/topbar/arrow_left.png
+_jtl_res/icon/topbar/item_arrow_left.png
+_jtl_res/icon/topbar/item_arrow_right.png
+_jtl_res/icon/topbar/menu.png

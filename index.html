@@ -1,0 +1,587 @@
+<!DOCTYPE HTML>
+<html manifest="cache.appcache">
+<head>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no' />
+<meta http-equiv="Content-type" content="text/html; charset=utf-8;">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<link href="JTLFramework.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="json2.js"></script>
+<script type="text/javascript" src="JDBFramework.js"></script>
+<script type="text/javascript" src="JTLFramework.js"></script>
+<title>基本情報一問一答</title>
+<style type="text/css">
+#stage1{
+	width: 100%;
+	background-color:#fff;
+	background-image: url(linen.png);
+}
+
+*{
+	-webkit-text-size-adjust: none;
+}
+
+.__jlt_stage_area * input[type="button"]{
+	font-size: 18px;
+	height: 43px;
+	margin: 8px auto;
+	width: 83%;
+}
+
+.appmenu_list{
+	text-align: center;
+}
+
+h1.app_title{
+	background-color: #FFFFFF;
+	background: -moz-linear-gradient(top, #ffffff,#efefef);
+	background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#efefef));
+	color: #415CF8;
+	box-shadow: 0px 0px 3px #bbb;
+	border: solid 1px #fff;
+	border-radius: 5px;
+	padding: 3px;
+	margin: 18px 5px;
+	font-weight: bold;
+	line-height: 37px;
+}
+.__jlt_stage_top_bar{
+/*
+	background-color: #818181;
+	background: -moz-linear-gradient(top, #B9D1F9,#6F92D8);
+	background: -webkit-gradient(linear, left top, left bottom, from(#B9D1F9), to(#6F92D8));
+*/
+}
+
+.__jlt_tableview_settingspage{
+	margin: 8px 5px;
+}
+
+.randomques_stage_layout .ques_status{
+	text-align: right;
+	margin: 6px 8px;
+}
+
+.randomques_stage_layout p{
+	font-weight: normal;
+	margin: 3px 10px 10px 10px;
+	padding:7px;
+	text-align: center;
+	font-size: 18px;
+	border: solid 1px #aaa;
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px #bbb;
+	background-color: #fff;
+	line-height: 24px;
+}
+
+.randomques_stage_layout .ans_listview{
+	width: 95%;
+	margin: 4px auto;
+	text-align: center;
+}
+
+</style>
+<script>
+
+var AppTopStage = function(doc){
+	var that = new JTL.Stage(doc);
+	var AppTopStageContext = that;
+	
+	JTL.override(that, "getStageTitle", function(){
+		return "メニュー";
+	});
+	
+	JTL.override(that, "OnTopButtonClick", function(type){
+		that.OnTopButtonClick._super(type);
+
+		switch(type){
+			case JTL.StageTopItem.LEFT_APPICON:
+				AppTopStageContext.setPage(0);
+				break;
+		}
+
+	});
+		
+	var MenuPage = function(doc){
+		var that = new JTL.Page(doc);
+		that.setPageId("top_tab_menu");
+		
+		JTL.override(that, "OnPageContentLoad", function(){
+			that.OnPageContentLoad._super();
+			that.setPageLayout(document.getElementById("appmenu_page_layout"));
+			
+			var randomButton = that.findViewById("btn_random_ques");
+			defaultBorder = "solid 1px #999";
+			randomButton.JTLView.setOnTouchListener(function(){
+				randomButton.style.border = "solid 2px #FFD700";
+			}, function(){
+				randomButton.style.border = defaultBorder;
+			}, function(){
+				AppTopStageContext.getStageManager().startStage("randomQuesStage");
+			});
+		});
+		
+		return that;
+	}
+
+	var RecordPage = function(doc){
+		var that = new JTL.Page(doc);
+		that.setPageId("top_tab_record");
+		
+		JTL.override(that, "OnPageContentLoad", function(){
+			that.OnPageContentLoad._super();
+			that.setPageLayout(document.getElementById("apprecord_page_layout"));
+		});
+		
+		return that;
+	}
+	var HelpPage = function(doc){
+		var that = new JTL.Page(doc);
+		that.setPageId("top_tab_help");
+		
+		JTL.override(that, "OnPageContentLoad", function(){
+			that.OnPageContentLoad._super();
+			that.setPageLayout(document.getElementById("apphelp_page_layout"));
+		});
+		
+		return that;
+	}
+	var SettingsPage = function(doc){
+		var that = new JTL.Page(doc);
+		that.setPageId("top_tab_settings");
+		
+		JTL.override(that, "OnPageContentLoad", function(){
+			that.OnPageContentLoad._super();
+			that.setPageLayout(document.getElementById("appsettings_page_layout"));
+			
+			var tv = new JTL.TableView(AppTopStageContext);
+
+			tv.setElement(that.findViewById("table"));
+			var d = [{
+				"title": "更新の確認", "desc": ""
+			},{
+				"title": "画面切り替え効果", "desc": "ON"
+			}];
+			var data1 = new JTL.TitleSectionAdapter(AppTopStageContext, d, ["title", "desc"]);
+			data1.setTitle("設定");
+			data1.setId("settings");
+			
+			var d2 = [{
+				"title": "ユーザデータの消去", "desc": ""
+			}];
+			var data2 = new JTL.TitleSectionAdapter(AppTopStageContext, d2, ["title", "desc"]);
+			data2.setTitle("データ");
+			data2.setId("data");
+			
+			tv.addSection(data1);
+			tv.addSection(data2);
+			tv.notifyAllDatasetChanged();
+			tv.setOnItemClickListener(function(a, b, c, d){
+				if (a == "settings"){
+					if (c == 0){
+						var m = AppTopStageContext.getStageManager().getAppManager();
+						var r = m.updateCheck();
+						if (!r){
+							alert("更新なし");
+						}
+					} else {
+						var s = new JTL.TableView(AppTopStageContext);
+						var sp = [{
+							"title": "ON", "desc":""
+						},{
+							"title": "OFF", "desc":""
+						}];
+						s.setTableViewTitle("画面切り替え効果の設定");
+						
+						var item = new JTL.TitleSectionAdapter(AppTopStageContext, sp, ["title", "desc"]);
+						item.setTitle("");
+						item.setId("0");
+						s.addSection(item);
+						s.setOnItemClickListener(function(a, b, c, d){
+								AppTopStageContext.hideSpinner();
+						});
+						AppTopStageContext.showSpinner(s);
+					}
+				} else if (a == "data"){
+					if (c == 0){
+						if (confirm("成績記録・設定をすべて消去します。")){
+							if (confirm("データの復元はできません。よろしいですか？")){
+								alert("消去するつもり");
+							}
+						}
+					}
+				}
+			});
+			
+		});
+		
+		return that;
+	}
+
+	JTL.override(that, "getPageAdapter", function(){
+		var that = new JTL.PageAdapter(doc);
+		that.addPage(new JTL.PageItem()
+			.setPageObj(MenuPage)
+			.setResourceId("MENU"));
+		that.addPage(new JTL.PageItem()
+			.setPageObj(RecordPage)
+			.setResourceId("RECORD"));
+		that.addPage(new JTL.PageItem()
+			.setPageObj(SettingsPage)
+			.setResourceId("SETTINGS"));
+		that.addPage(new JTL.PageItem()
+			.setPageObj(HelpPage)
+			.setResourceId("HELP"));
+		return that;
+	});
+	
+	JTL.override(that, "OnStageContentLoad", function(){
+		that.OnStageContentLoad._super();
+		setBottomView(JTL.getLayoutById("__jlt_stage_tab_bar1"));
+		setTopView(JTL.getLayoutById("__jlt_stage_title_bar1"));
+	});
+	
+	return that;
+}
+
+var QuesAdapter = function(context, data, layout, from, to){
+	var that = JTL.SimpleAdapter(context, data, layout, from, to);
+	
+	JTL.override(that, "getView", function(position, convertView){with(that){
+		var v = getView._super(position, convertView);
+		var d = getItem(position);
+		
+		var area = v.findViewById("name");
+		if (typeof d.correct != "undefined" && d.correct == true){
+			area.style.color = "#0000CD";
+			area.style.fontWeight = "bold";
+		} else {
+			area.style.color = "";
+			area.style.fontWeight = "";
+		}
+		
+		return v;
+	}});
+	
+	return that;
+}
+
+var RandomQuesStage = function(doc){
+	var that = new JTL.Stage(doc);
+	var RandomQuesContext = that;
+	
+	that.setStageId("random_Stage");
+	
+	JTL.override(that, "getStageTitle", function(){
+		return "ランダム一問一答";
+	});
+	
+	var leftFunc = function(){};
+	var rightFunc = function(){};
+	
+	var leftFuncAttach = function(){
+		leftFunc();
+	}
+	var rightFuncAttach = function(){
+		rightFunc();
+	}
+	
+	var quesSave = null;
+	var quesNum = null;
+	
+	JTL.override(that, "OnStageContentLoad", function(){
+		that.OnStageContentLoad._super();
+		that.setStageLayout(document.getElementById("randomques_stage_layout"));
+		setTopView(JTL.getLayoutById("__jlt_stage_navigation_bar2"));
+	});
+	
+	
+	JTL.override(that, "OnSessionRegSave", function(){
+		that.OnSessionRegSave._super();
+		return {"ques": quesSave, "num": quesNum};
+	});
+	
+	JTL.override(that, "OnStagePause", function(){
+		that.OnStagePause._super();
+		return {"ques": quesSave, "num": quesNum};
+	});
+	
+	JTL.override(that, "OnStageFinish", function(){
+		that.OnStageFinish._super();
+		return {"ques": quesSave, "num": quesNum};
+	});
+	
+	JTL.override(that, "OnStageStart", function(r){
+		that.OnStageStart._super();
+		JDB.Ajax("get", "ques.js", function(s){
+			var d_ques = eval(s);
+			
+			var d = [];
+			var i;
+			var ques = [];
+			
+			if (r && r.ques){
+				ques = r.ques;
+			} else {
+				for(i=0; i<d_ques.length; i++){
+					var e = d_ques[i];
+					if (typeof e.ans[0] == "object"){
+						var a = Math.floor(Math.random() * 4);
+						var b;
+						var c;
+						if (typeof e.mode == "undefined" ){
+							 c = Math.floor(Math.random() * 2);
+						} else {
+							c = e.mode;
+						}
+						do{
+							b = Math.floor(Math.random() * 4);
+						} while(a == b);
+						var newQ = {};
+						newQ.ques_body = e.ques_body + "：<br>\n";
+						if (c == 0){
+							newQ.ques_body += e.ans[a][0];
+							newQ.ans = [];
+							for(var j=0; j<4; j++){
+								newQ.ans[j] = e.ans[j][1];
+							}
+							newQ.answer = e.ans[a][1];
+						} else {
+							newQ.ques_body += e.ans[a][1];
+							newQ.ans = [];
+							for(var j=0; j<4; j++){
+								newQ.ans[j] = e.ans[j][0];
+							}
+							newQ.answer = e.ans[a][0];
+						}
+						ques.push(newQ);
+						
+						newQ = {};
+						newQ.ques_body = e.ques_body + "：<br>\n";
+						if (c == 0){
+							newQ.ques_body += e.ans[b][0];
+							newQ.ans = [];
+							for(var j=0; j<4; j++){
+								newQ.ans[j] = e.ans[j][1];
+							}
+							newQ.answer = e.ans[b][1];
+						} else {
+							newQ.ques_body += e.ans[b][1];
+							newQ.ans = [];
+							for(var j=0; j<4; j++){
+								newQ.ans[j] = e.ans[j][0];
+							}
+							newQ.answer = e.ans[b][0];
+						}
+						ques.push(newQ);
+					} else {
+						ques.push(e);
+					}
+					
+					ques[ques.length-1].ans.sort(function(a,b){
+						var x = Math.floor(Math.random() * 1000);
+						var y = Math.floor(Math.random() * 1000);
+						if (x > y){
+							return 1;
+						} else {
+							return -1;
+						}
+					});
+					
+				}
+				ques.sort(function(a,b){
+					var x = Math.floor(Math.random() * 1000);
+					var y = Math.floor(Math.random() * 1000);
+					if (x > y){
+						return 1;
+					} else {
+						return -1;
+					}
+				});
+			}
+			
+			var lv = new JTL.ListView(RandomQuesContext);
+			lv.setElement(RandomQuesContext.findViewById("ans_listview"));
+			
+			var ansCount = 0;
+			var colCount = 0;
+			
+			var answering = function(view, index, id){
+				if (d.correct == true) return ;
+				if (ques[c]["ans"][index] == ques[c]["answer"]){
+					RandomQuesContext.Toast.makeText(RandomQuesContext.getDocContext(), "正解 ○", RandomQuesContext.Toast.LENGTH_SHORT).show();
+					d[index].correct = true;
+					d.correct = true;
+					ques[c].correct = true;
+					ques[c].correctIdx = index;
+					a.notifyDatasetChanged();
+					window.scrollTo(0,0);
+					colCount++;
+				} else {
+					RandomQuesContext.Toast.makeText(RandomQuesContext.getDocContext(), "不正解 ×", RandomQuesContext.Toast.LENGTH_SHORT).show();
+				}
+				ansCount ++;
+				showStatus();
+			}
+			
+			d[0] = {"name":0};
+			var a = new QuesAdapter(that, d, JTL.getLayoutById("basic_listview_layout"), ["name"], ["name"]);
+			lv.setAdapter(a);
+			lv.setOnItemClickListener(answering);
+			
+			var showStatus = function(){
+				that.findViewById("ques_status").innerHTML = "問題番号 ： " + (c+1) + " / " + ques.length ;
+			}
+			
+			var c = (r && r.num) || 0;
+			var showQues = function(){
+				q = ques[c];
+				quesNum = c;
+				var i;
+				for(i=0; i<4; i++){
+					if (typeof q.ans == "Object"){
+						d[i] = {"name": q.ans[i]};
+					} else {
+						d[i] = {"name": q.ans[i]};
+					}
+				}
+				d.correct = q.correct || false;
+				if (d.correct){
+					d[q.correctIdx].correct = true;
+				}
+
+				var tx = that.findViewById("ques_body");
+				tx.innerHTML = q.ques_body;
+				showStatus();
+				a.notifyDatasetChanged();
+			}
+			
+			var goRightQues = function(){
+				if (c + 1 >= ques.length){
+					alert("問題一巡です\nお疲れ様でした");
+				} else {
+					c++;
+					showQues();
+				}
+			}
+			var goLeftQues = function(){
+				if (c - 1 == -1){
+				} else {
+					c--;
+					showQues();
+				}
+			}
+			rightFunc = goRightQues;
+			leftFunc = goLeftQues;
+		
+			quesSave = ques;
+			
+			showQues();
+		
+		}, null, false);	
+		
+
+	});
+	
+	JTL.override(that, "OnTopButtonClick", function(type){
+		that.OnTopButtonClick._super(type);
+
+		switch(type){
+			case JTL.StageTopItem.LEFT_APPICON:
+				RandomQuesContext.getStageManager().startStage("topStage");
+				break;
+			case JTL.StageTopItem.RIGHT_ITEM_RIGHT:
+				rightFuncAttach();
+				break;
+			case JTL.StageTopItem.RIGHT_ITEM_LEFT:
+				leftFuncAttach();
+				break;
+		}
+
+	});
+	
+	return that;
+}
+
+var init = function(){
+	JTL.setOnLoadFunction(function(){
+		var appManager = new JTL.AppManager(window, document);
+		appManager.setStageArea(document.getElementById("stage1"))
+			.setAppId("l&r.fe_exam.q&a")
+			.setAppName("基本情報午前試験 一問一答")
+			.setStagesObject({
+				"topStage": AppTopStage,
+				"randomQuesStage": RandomQuesStage
+			})
+			.setFirstStageId("topStage")
+			.startFirstStage();
+	});
+}
+
+var trace = function(s){
+	document.getElementById("trace").innerHTML += s + "<br>";
+}
+
+window.onload = init;
+</script>
+</head>
+<body class="__jtl">
+
+<div id="stage1_layout" class="__jlt_layout __jlt_stage_layout stage1_layout">
+</div>
+
+<div id="randomques_stage_layout" class="__jlt_layout __jlt_stage_layout randomques_stage_layout">
+	<div id="ques_status" class="ques_status"> 　</div>
+	<p>
+<!--		<span id="ques_txt">～に関する記述として、適切なものはどれか。</span><br>-->
+		<span id="ques_body"></span><br>
+	</p>
+	<div class="__jlt_view_default_listview ans_listview" id="ans_listview"></div>
+</div>
+
+<div id="appmenu_page_layout" class="__jlt_layout __jlt_page_layout">
+	<h1 class="app_title">基本情報技術者試験<br>一問一答問題集</h1>
+	<div class="appmenu_list">
+		<input type="button" value="ランダム一問一答" id="btn_random_ques"><br>
+		<input type="button" value="間違えた問題"><br>
+		<input type="button" value="全問網羅"><br>
+	</div>
+</div>
+<div id="apprecord_page_layout" class="__jlt_layout __jlt_page_layout">
+	<h1>成績</h1>
+</div>
+<div id="apphelp_page_layout" class="__jlt_layout __jlt_page_layout">
+	<h1>ヘルプ</h1>
+		<p>特になし</p>
+	<hr>
+	<h1>バージョン情報</h1>
+	<dl>
+		<dt>v1.0.0</dt>
+			<dd>アプリ公開</dd>
+	</dl>
+	<hr>
+	<h1>開発</h1>
+	<dl>
+		<dt>アプリケーション開発</dt>
+			<dd>L&R JDB Luigi</dd>
+		<dt>フレームワーク</dt>
+			<dd>JTL WebApp Framework</dd>
+		<dt>アイコン</dt>
+			<dd>Daniel Bruce danielbruce.se</dd>
+		<dt>背景画像</dt>
+			<dd>Fabian Schultz. fabianschultz.de</dd>
+	</dl>
+</div>
+<div id="appsettings_page_layout" class="__jlt_layout __jlt_page_layout">
+	<div class="__jlt_tableview_area __jlt_tableview_settingspage" id="table"></div>
+</div>
+
+<div id="stage1" class="__jlt_stage_area">
+	<div class="__jtl_loading_img">
+		<img src="_jtl_res/icon/other/loading1.gif"alt="ロード画像">
+	</div>
+</div>
+
+<!--<div id="trace" style="position: absolute; top: 0; left: 0; z-index: 10;"></div>-->
+</body>
+</html>
